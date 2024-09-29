@@ -1,5 +1,20 @@
 #+AUTHOR: Wasym A. Alonso
-#+TITLE: Валенки
+
+# Logo & Title
+#+begin_html
+<h1 align="center">
+<img src="assets/logo.png" alt="Valenki Logo">
+<br/>
+Валенки
+</h1>
+#+end_html
+
+# Subtitle
+#+begin_html
+<h4 align="center">
+Мне без валенок беда! 👢
+</h4>
+#+end_html
 
 #+begin_src sh
 go build [-ldflags '-s -w']
