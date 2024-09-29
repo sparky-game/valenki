@@ -1,5 +1,5 @@
 #+AUTHOR: Wasym A. Alonso
-#+TITLE: Валенки (Valenki)
+#+TITLE: Валенки
 
 #+begin_src sh
 go build [-ldflags '-s -w']
