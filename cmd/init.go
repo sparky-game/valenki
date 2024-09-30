@@ -7,7 +7,7 @@ import (
 )
 
 func Start() {
-  args := ArgParse()
+	args := ArgParse()
 	if *args.Server {
 		valenkiServer.HTTP(6969)
 	} else {

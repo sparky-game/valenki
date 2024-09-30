@@ -1,8 +1,8 @@
 package server
 
 import (
-  "net/http"
-  "encoding/json"
+	"encoding/json"
+	"net/http"
 )
 
 func JSONMiddleware(next http.Handler) http.Handler {

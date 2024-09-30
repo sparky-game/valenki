@@ -1,12 +1,13 @@
 package server
 
 import (
-  "net/http"
+	gmux "github.com/gorilla/mux"
+	"net/http"
 )
 
 func APIRouter() http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", HelloWorldHandler)
-	mux.HandleFunc("/roll", RollHandler)
+	mux := gmux.NewRouter()
+	mux.HandleFunc("/", HelloWorldHandler).Methods("GET") // TODO: remove it
+	mux.HandleFunc("/roll", RollHandler).Methods("GET")   // TODO: remove it
 	return JSONMiddleware(mux)
 }

@@ -1,9 +1,9 @@
 package server
 
 import (
-  "fmt"
-  "net/http"
-  "log"
+	"fmt"
+	"log"
+	"net/http"
 )
 
 func HTTP(port int) {

@@ -1,9 +1,9 @@
 package server
 
 import (
-  "time"
-  "net/http"
-  valenkiCommon "github.com/sparky-game/valenki/pkg/common"
+	valenkiCommon "github.com/sparky-game/valenki/pkg/common"
+	"net/http"
+	"time"
 )
 
 type Response struct {
