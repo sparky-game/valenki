@@ -1,7 +1,9 @@
 package parchis
 
+import "errors"
+
 type Cell struct {
-	OccupiedBy *Piece
+	OccupiedBy []Piece
 }
 
 type Board struct {
@@ -41,7 +43,7 @@ func (b *Board) IsSafeZone(pc *Piece) bool {
 	}
 	for _, cell := range sz {
 		for _, p := range cell.OccupiedBy {
-			if p == pc {
+			if p == *pc {
 				return true
 			}
 		}
@@ -72,16 +74,17 @@ func (b *Board) MovePiece(p *Piece, n int) error {
 			}
 		}
 	}
+  return nil
 }
 
 func (b *Board) addPieceToCell(p int, pc *Piece) {
-	b.Cells[p].OccupiedBy = append(b.Cells[p].OccupiedBy, pc)
+	b.Cells[p].OccupiedBy = append(b.Cells[p].OccupiedBy, *pc)
 }
 
 func (b *Board) removePieceFromCell(p int, pc *Piece) {
 	cell := &b.Cells[p]
 	for i, piece := range cell.OccupiedBy {
-		if piece == pc {
+		if piece == *pc {
 			cell.OccupiedBy = append(cell.OccupiedBy[:i], cell.OccupiedBy[i+1:]...)
 			return
 		}

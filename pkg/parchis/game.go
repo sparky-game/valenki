@@ -1,6 +1,7 @@
 package parchis
 
 import (
+  "errors"
 	valenkiCommon "github.com/sparky-game/valenki/pkg/common"
 )
 
@@ -53,7 +54,8 @@ func (g *Game) CheckIfGameFinished() bool {
 
 func (g *Game) MovePiece(playerIdx int, pieceID int, n int) error {
 	player := g.Players[playerIdx]
-	if piece, err := player.GetPieceByID(pieceID); err != nil {
+	piece, err := player.GetPieceByID(pieceID)
+  if err != nil {
 		return err
 	}
 	if piece.Position+n > 68 {

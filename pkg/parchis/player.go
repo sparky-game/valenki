@@ -1,5 +1,7 @@
 package parchis
 
+import "errors"
+
 type Player struct {
 	Name   string
 	Color  string
@@ -12,9 +14,9 @@ func NewPlayer(name, color string) *Player {
 		pieces[i] = NewPiece(i+1, color)
 	}
 	return &Player{
-		Name:  name,
-		Color: color,
-		Pieces, pieces,
+		Name:   name,
+		Color:  color,
+		Pieces: pieces,
 	}
 }
 
@@ -40,6 +42,7 @@ func (p *Player) CanMoveAnyPiece() bool {
 			return true
 		}
 	}
+	return false
 }
 
 func (p *Player) HasWon() bool {
