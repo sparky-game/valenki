@@ -12,11 +12,11 @@ func JSONMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func JSONEncoder(w http.ResponseWriter, r Response) {
+func JSONEncoder(w http.ResponseWriter, status int, r interface{}) {
 	encoder := json.NewEncoder(w)
 	encoder.SetIndent("", "  ")
+	w.WriteHeader(status)
 	if err := encoder.Encode(r); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
 }

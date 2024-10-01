@@ -3,7 +3,7 @@ package parchis
 import "errors"
 
 type Cell struct {
-	OccupiedBy []Piece
+	OccupiedBy []*Piece
 }
 
 type Board struct {
@@ -43,7 +43,7 @@ func (b *Board) IsSafeZone(pc *Piece) bool {
 	}
 	for _, cell := range sz {
 		for _, p := range cell.OccupiedBy {
-			if p == *pc {
+			if p == pc {
 				return true
 			}
 		}
@@ -52,17 +52,14 @@ func (b *Board) IsSafeZone(pc *Piece) bool {
 }
 
 func (b *Board) MovePiece(p *Piece, n int) error {
-	// Remove piece from current cell
 	if p.Position != -1 && p.Position < len(b.Cells) {
 		b.removePieceFromCell(p.Position, p)
 	}
-	// Update piece position
 	p.Position += n
 	if p.Position >= 68 {
 		p.Position = 68
 		p.Finished = true
 	}
-	// Place piece on new cell
 	if p.Position < 68 {
 		if b.IsSafeCell(p.Position) {
 			b.addPieceToCell(p.Position, p)
@@ -74,17 +71,40 @@ func (b *Board) MovePiece(p *Piece, n int) error {
 			}
 		}
 	}
-  return nil
+	return nil
+}
+
+func (b *Board) CanCapture(p *Piece, pos int) bool {
+	if pos >= 68 || b.IsSafeCell(pos) {
+		return false
+	}
+	occupiedPieces := b.Cells[pos].OccupiedBy
+	if len(occupiedPieces) == 1 && occupiedPieces[0].Color != p.Color {
+		return true
+	}
+	return false
+}
+
+func (b *Board) CapturePiece(p *Piece, pos int) error {
+	if !b.CanCapture(p, pos) {
+		return errors.New("unable to capture target piece")
+	}
+	capturedPiece := b.Cells[pos].OccupiedBy[0]
+	capturedPiece.Position = -1
+	b.removePieceFromCell(pos, capturedPiece)
+	b.MovePiece(p, pos-p.Position)
+	b.MovePiece(p, 20)
+	return nil
 }
 
 func (b *Board) addPieceToCell(p int, pc *Piece) {
-	b.Cells[p].OccupiedBy = append(b.Cells[p].OccupiedBy, *pc)
+	b.Cells[p].OccupiedBy = append(b.Cells[p].OccupiedBy, pc)
 }
 
 func (b *Board) removePieceFromCell(p int, pc *Piece) {
 	cell := &b.Cells[p]
 	for i, piece := range cell.OccupiedBy {
-		if piece == *pc {
+		if piece == pc {
 			cell.OccupiedBy = append(cell.OccupiedBy[:i], cell.OccupiedBy[i+1:]...)
 			return
 		}
