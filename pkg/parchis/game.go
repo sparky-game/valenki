@@ -31,11 +31,14 @@ func NewGame(playerNames []string) (*Game, error) {
 }
 
 func (g *Game) RollDice() int {
-	g.DiceValue = valenkiCommon.RollDice(1)
+	if g.DiceValue == 0 {
+		g.DiceValue = valenkiCommon.RollDice(1)
+	}
 	return g.DiceValue
 }
 
 func (g *Game) NextTurn() {
+	g.DiceValue = 0
 	g.CurrentTurn = (g.CurrentTurn + 1) % len(g.Players)
 }
 
@@ -52,16 +55,25 @@ func (g *Game) CheckIfGameFinished() bool {
 	return false
 }
 
-func (g *Game) MovePiece(playerIdx int, pieceID int, n int) error {
+func (g *Game) MovePiece(playerIdx int, pieceID int) error {
+	if playerIdx < 0 || playerIdx >= len(g.Players) {
+		return errors.New("Player ID doesn't exist")
+	}
+	if playerIdx != g.CurrentTurn {
+		return errors.New("It's not your turn!")
+	}
 	player := g.Players[playerIdx]
 	piece, err := player.GetPieceByID(pieceID)
 	if err != nil {
 		return err
 	}
-	if piece.Position+n > 68 {
+	if g.DiceValue == 0 {
+		return errors.New("How do I move? Need to roll dice first!")
+	}
+	if piece.Position+g.DiceValue > 68 {
 		return errors.New("You need the exact number to enter the goal")
 	}
-	g.Board.MovePiece(piece, n)
+	g.Board.MovePiece(piece, g.DiceValue)
 	if g.Board.CanCapture(piece, piece.Position) {
 		if err := g.Board.CapturePiece(piece, piece.Position); err != nil {
 			return err
