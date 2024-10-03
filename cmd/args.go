@@ -8,9 +8,8 @@ type Args struct {
 
 func ArgParse() Args {
 	args := Args{
-		Server: flag.Bool("server", false, "Start the Валенки server"),
+		Server: flag.Bool("s", false, "Start the Валенки server"),
 	}
-	flag.BoolVar(args.Server, "s", false, "Start the Валенки server (shorthand)")
 	flag.Parse()
 	return args
 }
