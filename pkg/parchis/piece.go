@@ -11,32 +11,20 @@ func NewPiece(id int, color string) *Piece {
 	return &Piece{
 		ID:       id,
 		Color:    color,
-		Position: -1,
+		Position: HOME_POSITION,
 		Finished: false,
 	}
 }
 
-func (p *Piece) Move(n int, b *Board) {
-	if !p.Finished {
-		newPos := p.Position + n
-		if newPos >= 68 {
-			newPos = 68
-			p.Finished = true
-		}
-		b.MovePiece(p, newPos-p.Position)
-		p.Position = newPos
-	}
-}
-
 func (p *Piece) IsInHouse() bool {
-	return p.Position == -1
+	return p.Position == HOME_POSITION
 }
 
 func (p *Piece) CanMove() bool {
 	return !p.IsInHouse() && !p.Finished
 }
 
-func (p *Piece) ResetToHouse() {
-	p.Position = -1
+func (p *Piece) ReturnToHouse() {
+	p.Position = HOME_POSITION
 	p.Finished = false
 }

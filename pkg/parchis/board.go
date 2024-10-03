@@ -52,23 +52,21 @@ func (b *Board) IsSafeZone(pc *Piece) bool {
 }
 
 func (b *Board) MovePiece(p *Piece, n int) error {
-	if p.Position != -1 && p.Position < len(b.Cells) {
+	if p.Position != HOME_POSITION && p.Position < len(b.Cells) {
 		b.removePieceFromCell(p.Position, p)
 	}
 	p.Position += n
 	if p.Position >= 68 {
 		p.Position = 68
 		p.Finished = true
-	}
-	if p.Position < 68 {
+	} else {
 		if b.IsSafeCell(p.Position) {
 			b.addPieceToCell(p.Position, p)
 		} else {
 			if len(b.Cells[p.Position].OccupiedBy) >= 2 && b.Cells[p.Position].OccupiedBy[0].Color == p.Color {
 				return errors.New("A barrier blocks your path")
-			} else {
-				b.addPieceToCell(p.Position, p)
 			}
+			b.addPieceToCell(p.Position, p)
 		}
 	}
 	return nil
@@ -90,7 +88,7 @@ func (b *Board) CapturePiece(p *Piece, pos int) error {
 		return errors.New("unable to capture target piece")
 	}
 	capturedPiece := b.Cells[pos].OccupiedBy[0]
-	capturedPiece.Position = -1
+	capturedPiece.Position = HOME_POSITION
 	b.removePieceFromCell(pos, capturedPiece)
 	b.MovePiece(p, pos-p.Position)
 	b.MovePiece(p, 20)
